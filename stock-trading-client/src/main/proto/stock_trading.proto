@@ -36,8 +36,13 @@ service StockTradingService {
   //Server streaming RPC method to subscribe to stock price updates
   rpc subscribeStockPrice(StockRequest) returns (stream StockResponse);
 
-  //Bulk order processing RPC method to handle multiple stock orders in one request
+  //Client streaming - Bulk order processing RPC method to handle multiple stock orders in one request
   rpc bulkStockOrder(stream StockOrder ) returns (stream OrderSummary);
+
+  //Bidirectional streaming RPC method for live trading updates
+  rpc liveTrading(stream StockOrder) returns (stream TradeStatus);
+
+
 
 }
 
@@ -85,4 +90,16 @@ message OrderSummary {
   int32  totalOrders = 1; // Total number of orders processed
   double totalAmount = 2; // Total amount for all processed orders
   int32 successCount = 3; // Number of successfully processed orders
+}
+
+
+/**
+  * TradeStatus - Message representing the status of a trade in live trading updates
+  * Contains details about the trade status such as order ID, status, and timestamp
+  */
+message TradeStatus {
+  string orderId = 1; // Unique identifier for the order
+  string status = 2; // Status of the trade (e.g., "EXECUTED", "PENDING", "FAILED")
+  string message = 3; // Additional message or details about the trade status
+  string timestamp = 4; // Timestamp of when the trade status was updated (ISO 8601 format recommended)
 }

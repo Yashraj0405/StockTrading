@@ -21,15 +21,23 @@ public class StockTradingClientApplication  implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         String stockSymbol = "INFY";
+
+        //gRPC Unary Call
 //        System.out.println("Requesting stock price for: " + stockSymbol);
 //        var response = stockClientService.getStockPrice(stockSymbol);
 //        System.out.println("Received stock price: " + response.getPrice());
 //        System.out.println("Received stock at: " + response.getTimestamp());
 
+        //gRPC Server Streaming
 //        System.out.println("Subscribing to stock price updates for: " + stockSymbol);
 //        stockClientService.subscribeStockPrice(stockSymbol);
 
+        //gRPC Client Streaming
 //        System.out.println("Placing bulk stock orders...");
 //        stockClientService.placeBulkStockOrders();
+
+        //gRPC Bi-Directional Streaming
+        System.out.println("Starting bi-directional streaming for stock orders...");
+        stockClientService.startTrading();
     }
 }
