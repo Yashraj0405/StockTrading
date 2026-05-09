@@ -32,6 +32,10 @@ service StockTradingService {
    * @return StockResponse - Contains stock symbol, current price, and timestamp
    */
   rpc getStockPrice(StockRequest) returns (StockResponse);
+
+  //Server streaming RPC method to subscribe to stock price updates
+  rpc subscribeStockPrice(StockRequest) returns (stream StockResponse);
+
 }
 
 /**
