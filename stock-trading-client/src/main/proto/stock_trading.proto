@@ -1,0 +1,59 @@
+/**
+ * Protocol Buffers definition for Stock Trading Service
+ * Used to define gRPC service contracts and message structures
+ */
+syntax = "proto3";
+
+// Namespace/package for the generated classes
+package stockTrading;
+
+/**
+ * Java-specific options for code generation:
+ * - java_multiple_files: Generates separate files for each message (recommended)
+ * - java_package: Package name where generated Java classes will be placed
+ * - java_outer_classname: Outer class name for the proto file definition
+ */
+option java_multiple_files = true;
+option java_package = "com.grpc.stockTrading";
+option java_outer_classname = "StockTradingProto";
+
+/**
+ * StockTradingService - gRPC service definition
+ * Defines RPC methods that clients can call on this service
+ */
+service StockTradingService {
+  /**
+   * getStockPrice - UNARY RPC call
+   * Retrieves the current price for a specific stock symbol
+   *
+   * UNARY: One request produces one response (simple request-response pattern)
+   *
+   * @param StockRequest - Contains the stock symbol to query
+   * @return StockResponse - Contains stock symbol, current price, and timestamp
+   */
+  rpc getStockPrice(StockRequest) returns (StockResponse);
+}
+
+/**
+ * StockRequest - Request message for price lookup
+ * Contains the data the client sends to the server
+ */
+message StockRequest {
+  // Field 1: Stock ticker symbol (e.g., "APPLE", "GOOGLE")
+  string stockSymbol = 1;
+}
+
+/**
+ * StockResponse - Response message with stock price information
+ * Contains the data the server sends back to the client
+ */
+message StockResponse {
+  // Field 1: The stock ticker symbol that was queried
+  string stockSymbol = 1;
+
+  // Field 2: Current price of the stock as a double (supports decimals)
+  double price = 2;
+
+  // Field 3: Timestamp of when the price was fetched (ISO 8601 format recommended)
+  string timestamp = 3;
+}
