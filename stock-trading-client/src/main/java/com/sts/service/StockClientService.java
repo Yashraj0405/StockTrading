@@ -1,8 +1,7 @@
 package com.sts.service;
 
-import com.grpc.stockTrading.StockRequest;
-import com.grpc.stockTrading.StockResponse;
-import com.grpc.stockTrading.StockTradingServiceGrpc;
+import com.grpc.stockTrading.*;
+import io.grpc.stub.StreamObserver;
 import net.devh.boot.grpc.client.inject.GrpcClient;
 import org.springframework.stereotype.Service;
 
@@ -44,5 +43,43 @@ public class StockClientService {
                     System.out.println("Completed receiving stock price updates.");
                 }
             });
+        }
+
+        public void placeBulkStockOrders() {
+            StreamObserver<OrderSummary> responseObserver = new StreamObserver<OrderSummary>() {
+                @Override
+                public void onNext(OrderSummary orderSummary) {
+                    System.out.println("Received Order Summary: ");
+                    System.out.println("Total Orders: " + orderSummary.getTotalOrders());
+                    System.out.println("Total Amount: " + orderSummary.getTotalAmount());
+                    System.out.println("Successful Orders: " + orderSummary.getSuccessCount());
+                }
+
+                @Override
+                public void onError(Throwable t) {
+                    System.err.println("Error placing bulk stock orders: " + t.getMessage());
+                }
+
+                @Override
+                public void onCompleted() {
+                    System.out.println("Completed placing bulk stock orders.");
+                }
+            };
+
+            StreamObserver<StockOrder> requestObserver =  stockTradingServiceStub.bulkStockOrder(responseObserver);
+
+            // Send Multiple Stock Orders
+            try{
+                requestObserver.onNext(StockOrder.newBuilder().setStockSymbol("AAPL").setQuantity(10).setPrice(150.0).build());
+                requestObserver.onNext(StockOrder.newBuilder().setStockSymbol("GOOGL").setQuantity(5).setPrice(2800.0).build());
+                requestObserver.onNext(StockOrder.newBuilder().setStockSymbol("AMZN").setQuantity(2).setPrice(3400.0).build());
+                requestObserver.onNext(StockOrder.newBuilder().setStockSymbol("MSFT").setQuantity(8).setPrice(300.0).build());
+
+                requestObserver.onCompleted();
+
+            }catch (Exception e){
+                requestObserver.onError(e);
+            }
+
         }
 }

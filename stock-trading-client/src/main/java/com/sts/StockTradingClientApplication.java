@@ -26,7 +26,10 @@ public class StockTradingClientApplication  implements CommandLineRunner {
 //        System.out.println("Received stock price: " + response.getPrice());
 //        System.out.println("Received stock at: " + response.getTimestamp());
 
-        System.out.println("Subscribing to stock price updates for: " + stockSymbol);
-        stockClientService.subscribeStockPrice(stockSymbol);
+//        System.out.println("Subscribing to stock price updates for: " + stockSymbol);
+//        stockClientService.subscribeStockPrice(stockSymbol);
+
+//        System.out.println("Placing bulk stock orders...");
+//        stockClientService.placeBulkStockOrders();
     }
 }

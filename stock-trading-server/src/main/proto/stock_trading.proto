@@ -36,6 +36,9 @@ service StockTradingService {
   //Server streaming RPC method to subscribe to stock price updates
   rpc subscribeStockPrice(StockRequest) returns (stream StockResponse);
 
+  //Bulk order processing RPC method to handle multiple stock orders in one request
+  rpc bulkStockOrder(stream StockOrder ) returns (stream OrderSummary);
+
 }
 
 /**
@@ -60,4 +63,26 @@ message StockResponse {
 
   // Field 3: Timestamp of when the price was fetched (ISO 8601 format recommended)
   string timestamp = 3;
+}
+
+/**
+ * StockOrder - Message representing a stock order for bulk processing
+ * Contains details about the stock order such as symbol, quantity, and order type
+ */
+message StockOrder {
+  string orderId = 1; // Unique identifier for the order
+  string stockSymbol = 2; // Stock ticker symbol (e.g., "APPLE", "GOOGLE")
+  int32 quantity = 3; // Number of shares to buy/sell
+  double price = 4; // Price per share for the order
+  string orderType = 5; // Type of order (e.g., "BUY", "SELL")
+}
+
+/**
+ * OrderSummary - Message representing the summary of a processed stock order
+ * Contains details about the order processing result such as status and execution time
+ */
+message OrderSummary {
+  int32  totalOrders = 1; // Total number of orders processed
+  double totalAmount = 2; // Total amount for all processed orders
+  int32 successCount = 3; // Number of successfully processed orders
 }
